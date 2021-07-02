@@ -31,17 +31,12 @@ if(Set-WinRMState $ComputerName){
                 new-item -Path "\\$ComputerName\c$\install" -ItemType "Directory"
             }
             Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-                $oldTMP = $env:TMP
-                $oldTEMP = $env:TEMP
-                $env:TMP = "C:\install\"
-                $env:TEMP = "C:\install\"
                 Write-Host "Downloading installer"
                 Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\vlc.msi"
                 Write-Host "Starting install"
                 Start-Process -FilePath msiexec -ArgumentList "/i c:\install\vlc.msi /q" -Verb runas -Wait
-                # Remove-Item "c:\install\vlc.exe"
-                $env:TMP = $oldTMP
-                $env:TEMP = $oldTEMP
+                Write-Host "Removing installer"
+                Remove-Item "c:\install\vlc.msi"
             }-ArgumentList $download
         }
         else {

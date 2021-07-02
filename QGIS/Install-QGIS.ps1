@@ -21,9 +21,8 @@ function Set-WinRMState ([string]$computer) {
 }
 
 if(Set-WinRMState $ComputerName){
-    $git = Invoke-WebRequest -Uri 'https://git-scm.com/download/win' -UseBasicParsing
-    if($git.StatusCode -eq 200){
-        $download = ($git.Links | Where-Object {$_ -match "64-bit.exe"}).href
+    $qgis = ((Invoke-WebRequest "https://qgis.org/en/site/forusers/download.html" -UseBasicParsing).links | Where-Object {$_.href -match ".msi"})[1].href
+    if($qgis -match ".msi"){
         Write-Host "Checking for install directory"
         if (-not (Test-Path "\\$ComputerName\c$\install")) {
             Write-Host "Creating install directory"
@@ -31,14 +30,14 @@ if(Set-WinRMState $ComputerName){
         }
         Invoke-Command -ComputerName $ComputerName -ScriptBlock {
             Write-Host "Downloading installer"
-            Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\Git.exe"
+            Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\qgis.msi"
             Write-Host "Starting install"
-            Start-Process -FilePath "c:\install\Git.exe" -ArgumentList "/VERYSILENT /NORESTART" -Verb runas -Wait
+            Start-Process msiexec -ArgumentList "/i c:\install\qgis.msi /qn" -Verb runas -Wait
             Write-Host "Removing installer"
-            Remove-Item "c:\install\Git.exe"
-        }-ArgumentList $download
+            Remove-Item "c:\install\qgis.msi"
+        }-ArgumentList $qgis
     }
     else {
-        Write-Host "Error "$git.StatusCode
+        Write-Host "Error getting download url"
     }    
 }

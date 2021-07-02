@@ -29,6 +29,7 @@ if (Set-WinRMState $ComputerName -eq $true) {
         $pdn = Invoke-WebRequest https://www.dotpdn.com/downloads/pdn.html
         $downloadfile = ($pdn.links | Where-Object {$_.href -match ".zip"})[0].href.replace('..','')
         Invoke-WebRequest -Uri " https://www.dotpdn.com$downloadfile" -OutFile c:\install\pdn.zip
+        Write-Host "Starting install"
         Expand-Archive -literalpath "C:\install\pdn.zip" -DestinationPath "C:\install\pdn"
         $installer = Get-ChildItem pdn\*.exe
         Start-Process $installer -ArgumentList "/auto" -verb runas -Wait

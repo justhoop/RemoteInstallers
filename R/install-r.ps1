@@ -26,10 +26,6 @@ if (Set-WinRMState $ComputerName -eq $true) {
         new-item -Path "\\$ComputerName\c$\install" -ItemType "Directory"
     }
     Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-        $oldTMP = $env:TMP
-        $oldTEMP = $env:TEMP
-        $env:TMP = "C:\install\"
-        $env:TEMP = "C:\install\"
         Write-Host "Downloading latest installer"
         $r = Invoke-WebRequest -Uri "https://cran.r-project.org/bin/windows/base/release.htm" -UseBasicParsing
         $filename = ($r.Content.split(";")[1]).split('"')[0].split('=')[1]
@@ -39,7 +35,5 @@ if (Set-WinRMState $ComputerName -eq $true) {
         Start-Sleep -Seconds 5
         Write-Host "Removing install file"
         Remove-Item -Path "c:\install\$filename"
-        $env:TMP = $oldTMP
-        $env:TEMP = $oldTEMP
     }
 }

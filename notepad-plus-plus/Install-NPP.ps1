@@ -33,18 +33,12 @@ function Install-NPP {
             $downloads = $np.links | Where-Object {$_.outerHTML -match "Installer.x64.exe"}
             $downloadurl = "https://github.com" + $downloads[0].href
             Invoke-Command -ComputerName $ComputerName -ScriptBlock{
-                $oldTMP = $env:TMP
-                $oldTEMP = $env:TEMP
-                $env:TMP = "C:\install\"
-                $env:TEMP = "C:\install\"
                 Write-Host "Downloading installer"
                 Invoke-WebRequest -Uri $Args[0] -OutFile "C:\install\npp.exe"
                 Write-Host "Starting install"
                 Start-Process "C:\install\npp.exe" -ArgumentList "/S" -Verb Runas -Wait
                 Write-Host "Removing installer"
                 Remove-Item -Path "C:\install\npp.exe"
-                $env:TMP = $oldTMP
-                $env:TEMP = $oldTEMP
             } -ArgumentList $downloadurl
         }
     }   

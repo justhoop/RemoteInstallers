@@ -28,15 +28,12 @@ if (Set-WinRMState $ComputerName -eq $true) {
     Write-Host "Starting install"
     if ($changetempdir) {
         Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-            $oldTMP = $env:TMP
-            $oldTEMP = $env:TEMP
-            $env:TMP = "C:\install\"
-            $env:TEMP = "C:\install\"
+            Write-Host "Downloading installer"
             Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\Mendeley.exe"
+            Write-Host "Starting install"
             Start-Process -FilePath "c:\install\Mendeley.exe" -ArgumentList "/S" -Verb RunAs -Wait
+            Write-Host "Removing installer"
             Remove-Item "c:\install\Mendeley.exe"
-            $env:TMP = $oldTMP
-            $env:TEMP = $oldTEMP
         } -ArgumentList $url
     }
     Start-Sleep -Seconds 5

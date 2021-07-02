@@ -29,14 +29,8 @@ if (Set-WinRMState $ComputerName -eq $true) {
         $g = Invoke-WebRequest 'https://www.gimp.org/downloads/' -UseBasicParsing
         $url = "https:" + ($g.links | Where-Object {$_.title -match 'Download GIMP via HTTP'}).href.tostring()
         Invoke-WebRequest -Uri $url -UseBasicParsing -OutFile "c:\install\gimp.exe"
-        $oldTMP = $env:TMP
-        $oldTEMP = $env:TEMP
-        $env:TMP = "C:\install\"
-        $env:TEMP = "C:\install\"
         Write-Host "Satrting install"
         Start-Process -FilePath "c:\install\gimp.exe" -ArgumentList "/VERYSILENT /NORESTART /RESTARTEXITCODE=3010 /SUPPRESSMSGBOXES /SP-" -Wait
-        $env:TMP = $oldTMP
-        $env:TEMP = $oldTEMP
         Start-Sleep -Seconds 5
         Write-Host "Removing install file"
         Remove-Item -Path "c:\install\gimp.exe"

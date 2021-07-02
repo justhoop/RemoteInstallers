@@ -30,15 +30,12 @@ if(Set-WinRMState $ComputerName){
             new-item -Path "\\$ComputerName\c$\install" -ItemType "Directory"
         }
         Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-            $oldTMP = $env:TMP
-            $oldTEMP = $env:TEMP
-            $env:TMP = "C:\install\"
-            $env:TEMP = "C:\install\"
+            Write-Host "Downloading installer"
             Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\rtools.exe"
+            Write-Host "Starting install"
             Start-Process -FilePath "c:\install\rtools.exe" -ArgumentList "/VERYSILENT" -Verb runas -Wait
+            Write-Host "Removing installer"
             Remove-Item "c:\install\rtools.exe"
-            $env:TMP = $oldTMP
-            $env:TEMP = $oldTEMP
         }-ArgumentList $download
     }
     else {

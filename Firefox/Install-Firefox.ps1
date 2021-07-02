@@ -29,14 +29,11 @@ if (Set-WinRMState $ComputerName -eq $true) {
     }
     Write-Host "Starting install"
     Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-        $oldTMP = $env:TMP
-        $oldTEMP = $env:TEMP
-        $env:TMP = "C:\install\"
-        $env:TEMP = "C:\install\"
+        Write-Host "Downloading installer"
         Invoke-WebRequest -Uri $args[0] -OutFile "c:\install\firefox.exe" -UseBasicParsing
+        Write-Host "Starting install"
         Start-Process -FilePath "c:\install\firefox.exe" -ArgumentList $args[1] -Verb runas -Wait
+        Write-Host "Removing installer"
         Remove-Item "c:\install\firefox.exe"
-        $env:TMP = $oldTMP
-        $env:TEMP = $oldTEMP
     } -ArgumentList $url, $arguments
 }

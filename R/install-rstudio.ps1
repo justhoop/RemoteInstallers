@@ -27,10 +27,6 @@ if (Set-WinRMState $ComputerName -eq $true) {
     }
     if (Test-Path "\\$ComputerName\c$\install\$sourcefile") {
         Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-            $oldTMP = $env:TMP
-            $oldTEMP = $env:TEMP
-            $env:TMP = "C:\install\"
-            $env:TEMP = "C:\install\"
             Write-Host "Downloading latest installer"
             $rstudio = Invoke-WebRequest -uri "https://www.rstudio.com/products/rstudio/download/" -UseBasicParsing
             $downloadfile =  (($rstudio.Links | Where-Object {$_.href -match 'https://download1.rstudio.org/desktop/windows/'})[1]).href
@@ -39,8 +35,6 @@ if (Set-WinRMState $ComputerName -eq $true) {
             Start-Sleep -Seconds 5
             Write-Host "Removing install file"
             Remove-Item -Path "c:\install\rstudio.exe"
-            $env:TMP = $oldTMP
-            $env:TEMP = $oldTEMP
         }
     }
 }
