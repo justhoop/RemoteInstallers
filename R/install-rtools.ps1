@@ -1,5 +1,5 @@
 param(
-    [Parameter(mandatory = $true)][string]$ComputerName,
+    [Parameter(mandatory = $true)][string]$ComputerName
     )
 
 function Set-WinRMState ([string]$computer) {
