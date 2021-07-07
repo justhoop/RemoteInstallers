@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of the VLC media player.
+.DESCRIPTION
+Finds the latest version of the VLC media player available, then downloads and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-R -ComputerName PC01
+#>
+
 param([Parameter(mandatory = $true)][string]$ComputerName )
 
 function Set-WinRMState ([string]$computer) {

@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of Git source control.
+.DESCRIPTION
+Finds the latest version of Git available, then downloads and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-Git -ComputerName PC01
+#>
+
 param(
     [Parameter(mandatory = $true)][string]$ComputerName
     )

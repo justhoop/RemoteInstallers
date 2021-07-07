@@ -1,6 +1,15 @@
-param(
-    [Parameter(mandatory = $true)][string]$ComputerName
-    )
+<#
+.SYNOPSIS
+Install the latest version of RTools.
+.DESCRIPTION
+Finds the latest version of RTools available, then downloads and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-RTools -ComputerName PC01
+#>
+
+param([Parameter(mandatory = $true)][string]$ComputerName)
 
 function Set-WinRMState ([string]$computer) {
     Write-Host "Checking for PSRemoting"

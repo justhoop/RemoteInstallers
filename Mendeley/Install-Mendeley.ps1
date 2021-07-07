@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of Mendeley.
+.DESCRIPTION
+Uses a permalink to get the latest version of Mendeley and install it silently.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-Mendeley -ComputerName PC01
+#>
+
 param([Parameter(mandatory = $true)][string]$ComputerName )
 $url = "https://www.mendeley.com/autoupdates/installer/Windows-x86/stable-incoming"
 

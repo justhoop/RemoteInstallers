@@ -1,6 +1,15 @@
-param(
-    [Parameter(mandatory = $true)][string]$ComputerName
-    )
+<#
+.SYNOPSIS
+Install the latest version of iTunes.
+.DESCRIPTION
+Uses a permalink to get the latest 64 bit version of iTunes and install it silently.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-iTunes -ComputerName PC01
+#>
+
+param([Parameter(mandatory = $true)][string]$ComputerName)
 
 function Set-WinRMState ([string]$computer) {
     Write-Host "Checking for PSRemoting"

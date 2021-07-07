@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of Paint.NET.
+.DESCRIPTION
+Finds the latest version of Paint.NET available, then downloads, extracts and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-Paintdotnet -ComputerName PC01
+#>
+
 param([Parameter(mandatory = $true)][string]$ComputerName )
 
 function Set-WinRMState ([string]$computer) {

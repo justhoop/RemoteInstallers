@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of Firefox.
+.DESCRIPTION
+Uses a permalink to get the latest 64 bit version of Firefox and install it silently.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-Firefox -ComputerName PC01
+#>
+
 param([Parameter(mandatory = $true)][string]$ComputerName )
 
 $url = "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US"

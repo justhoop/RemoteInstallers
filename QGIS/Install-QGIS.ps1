@@ -1,6 +1,15 @@
-param(
-    [Parameter(mandatory = $true)][string]$ComputerName
-    )
+<#
+.SYNOPSIS
+Install the latest long-term version of QGIS.
+.DESCRIPTION
+Finds the latest long-term version of QGIS available, then downloads and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-QGIS -ComputerName PC01
+#>
+
+param([Parameter(mandatory = $true)][string]$ComputerName)
 
 function Set-WinRMState ([string]$computer) {
     Write-Host "Checking for PSRemoting"
@@ -22,6 +31,8 @@ function Set-WinRMState ([string]$computer) {
 
 if(Set-WinRMState $ComputerName){
     $qgis = ((Invoke-WebRequest "https://qgis.org/en/site/forusers/download.html" -UseBasicParsing).links | Where-Object {$_.href -match ".msi"})[1].href
+    # Use the follwing line instead of the above if you want the latest version.
+    # $qgis = ((Invoke-WebRequest "https://qgis.org/en/site/forusers/download.html" -UseBasicParsing).links | Where-Object {$_.href -match ".msi"})[0].href
     if($qgis -match ".msi"){
         Write-Host "Checking for install directory"
         if (-not (Test-Path "\\$ComputerName\c$\install")) {

@@ -1,3 +1,14 @@
+<#
+.SYNOPSIS
+Install the latest version of GIMP photo editor.
+.DESCRIPTION
+Finds the latest version of GIMP available, then downloads and installs it.
+.PARAMETER ComputerName
+The name of the remote computer to install to.
+.EXAMPLE
+Install-GIMP -ComputerName PC01
+#>
+
 param([Parameter(mandatory = $true)][string]$ComputerName )
 
 function Set-WinRMState ([string]$computer) {
@@ -29,7 +40,7 @@ if (Set-WinRMState $ComputerName -eq $true) {
         $g = Invoke-WebRequest 'https://www.gimp.org/downloads/' -UseBasicParsing
         $url = "https:" + ($g.links | Where-Object {$_.title -match 'Download GIMP via HTTP'}).href.tostring()
         Invoke-WebRequest -Uri $url -UseBasicParsing -OutFile "c:\install\gimp.exe"
-        Write-Host "Satrting install"
+        Write-Host "Starting install"
         Start-Process -FilePath "c:\install\gimp.exe" -ArgumentList "/VERYSILENT /NORESTART /RESTARTEXITCODE=3010 /SUPPRESSMSGBOXES /SP-" -Wait
         Start-Sleep -Seconds 5
         Write-Host "Removing install file"
