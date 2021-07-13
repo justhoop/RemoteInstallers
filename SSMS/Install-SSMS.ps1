@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-Install the latest version of Cisco Webex.
+Install the latest version of SQL Server Management Studio.
 .DESCRIPTION
-Uses a permalink to get the latest 64 bit version of Webex and install it silently.
+Uses a permalink to get the latest version of SQL Server Management Studio and install it silently.
 .PARAMETER ComputerName
 The name of the remote computer to install to.
 .EXAMPLE
-Install-Webex -ComputerName PC01
+Install-SSMS -ComputerName PC01
 #>
 
 param([Parameter(mandatory = $true)][string]$ComputerName )
@@ -29,7 +29,7 @@ function Set-WinRMState ([string]$computer) {
     }
 }
 
-if (Set-WinRMState $ComputerName -eq $true) {
+if (Set-WinRMState $ComputerName) {
     Write-Host "Checking for install directory"
     if (-not (Test-Path "\\$ComputerName\c$\install")) {
         Write-Host "Creating install directory"
@@ -38,10 +38,10 @@ if (Set-WinRMState $ComputerName -eq $true) {
     Write-Host "Starting install"
     Invoke-Command -ComputerName $ComputerName -ScriptBlock {
         Write-Host "Downloading installer"
-        Invoke-WebRequest -Uri "https://binaries.webex.com/WebexTeamsDesktop-Windows-Gold/Webex.msi" -OutFile "c:\install\Webex.msi" -UseBasicParsing
+        Invoke-WebRequest -Uri "https://aka.ms/ssmsfullsetup" -OutFile "c:\install\SSMS-Setup-ENU.exe" -UseBasicParsing
         Write-Host "Starting install"
-        Start-Process -FilePath msiexec -ArgumentList "/i c:\install\Webex.msi /qn" -Wait
+        Start-Process -FilePath "C:\install\SSMS-Setup-ENU.exe" -ArgumentList "/install /quiet /norestart"-Verb runas -Wait
         Write-Host "Removing installer"
-        Remove-Item "c:\install\Webex.msi"
+        Remove-Item "c:\install\SSMS-Setup-ENU.exe"
     }
 }

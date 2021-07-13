@@ -6,7 +6,7 @@ Finds the latest version of the VLC media player available, then downloads and i
 .PARAMETER ComputerName
 The name of the remote computer to install to.
 .EXAMPLE
-Install-R -ComputerName PC01
+Install-VLC -ComputerName PC01
 #>
 
 param([Parameter(mandatory = $true)][string]$ComputerName )
