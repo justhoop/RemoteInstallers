@@ -41,8 +41,10 @@ if (Set-WinRMState $ComputerName -eq $true) {
         $downloadfile = ($ImageJ.links | Where-Object {$_.href -match "-win-"}).href
         Invoke-WebRequest -Uri $downloadfile -OutFile c:\install\imagej.zip
         Write-Host "Starting install"
-        Expand-Archive -literalpath "C:\install\imagej.zip" -DestinationPath "C:\"
-        New-Item -ItemType SymbolicLink -Path "C:\Users\Public\Desktop" -Name "ImageJ.lnk" -Value "C:\ImageJ\ImageJ.exe"
+        Expand-Archive -literalpath "C:\install\imagej.zip" -DestinationPath "C:\Program Files\"
+        New-Item -ItemType SymbolicLink -Path "C:\Users\Public\Desktop" -Name "ImageJ.lnk" -Value "C:\Program Files\ImageJ\ImageJ.exe"
+        Write-Host "Granting users write permission to folder"
+        Start-Process -FilePath "icacls.exe" -ArgumentList '"C:\Program Files\ImageJ" /grant BUILTIN\Users:(OI)(CI)M' -Verb runas -Wait
         Write-Host "Removing install file"
         Remove-Item -Path "c:\install\imagej.zip"
     }
