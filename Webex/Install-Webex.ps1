@@ -40,7 +40,7 @@ if (Set-WinRMState $ComputerName -eq $true) {
         Write-Host "Downloading installer"
         Invoke-WebRequest -Uri "https://binaries.webex.com/WebexTeamsDesktop-Windows-Gold/Webex.msi" -OutFile "c:\install\Webex.msi" -UseBasicParsing
         Write-Host "Starting install"
-        Start-Process -FilePath msiexec -ArgumentList "/i c:\install\Webex.msi /qn" -Wait
+        Start-Process -FilePath msiexec -ArgumentList "/i c:\install\Webex.msi /qn ACCEPT_EULA=TRUE ALLUSERS=1" -Wait
         Write-Host "Removing installer"
         Remove-Item "c:\install\Webex.msi"
     }
