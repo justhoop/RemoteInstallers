@@ -35,12 +35,12 @@ if (Set-WinRMState $ComputerName) {
         Write-Host "Creating install directory"
         new-item -Path "\\$ComputerName\c$\install" -ItemType "Directory"
     }
-    Write-Host "Starting install"
     Invoke-Command -ComputerName $ComputerName -ScriptBlock {
         Write-Host "Downloading installer"
         Invoke-WebRequest -Uri "https://aka.ms/ssmsfullsetup" -OutFile "c:\install\SSMS-Setup-ENU.exe" -UseBasicParsing
         Write-Host "Starting install"
-        Start-Process -FilePath "C:\install\SSMS-Setup-ENU.exe" -ArgumentList "/install /quiet /norestart"-Verb runas -Wait
+        $sql = Start-Process -FilePath "C:\install\SSMS-Setup-ENU.exe" -ArgumentList "/install /quiet /norestart"-Verb runas -Wait -PassThru
+        Write-Host "Exit code"$sql.ExitCode
         Write-Host "Removing installer"
         Remove-Item "c:\install\SSMS-Setup-ENU.exe"
     }
