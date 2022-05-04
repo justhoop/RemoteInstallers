@@ -30,21 +30,14 @@ function Set-WinRMState ([string]$computer) {
 }
 
 if (Set-WinRMState $ComputerName -eq $true) {
-    Write-Host "Checking for install directory"
-    if (-not (Test-Path "\\$ComputerName\c$\install")) {
-        Write-Host "Creating install directory"
-        new-item -Path "\\$ComputerName\c$\install" -ItemType "Directory"
-    }
-    if (Test-Path "\\$ComputerName\c$\install\$sourcefile") {
-        Invoke-Command -ComputerName $ComputerName -ScriptBlock {
-            Write-Host "Downloading latest installer"
-            $rstudio = Invoke-WebRequest -uri "https://www.rstudio.com/products/rstudio/download/" -UseBasicParsing
-            $downloadfile =  (($rstudio.Links | Where-Object {$_.href -match 'https://download1.rstudio.org/desktop/windows/'})[1]).href
-            Invoke-WebRequest -Uri $downloadfile -OutFile "c:\install\rstudio.exe"
-            Start-Process "c:\install\rstudio.exe" -ArgumentList "/S" -verb runas -Wait
-            Start-Sleep -Seconds 5
-            Write-Host "Removing install file"
-            Remove-Item -Path "c:\install\rstudio.exe"
-        }
+    Invoke-Command -ComputerName $ComputerName -ScriptBlock {
+        Write-Host "Downloading latest installer"
+        $rstudio = Invoke-WebRequest -uri "https://www.rstudio.com/products/rstudio/download/" -UseBasicParsing
+        $downloadfile = (($rstudio.Links | Where-Object { $_.href -match 'https://download1.rstudio.org/desktop/windows/' })[1]).href
+        Invoke-WebRequest -Uri $downloadfile -OutFile "$env:TEMP\rstudio.exe"
+        Start-Process "$env:TEMP\rstudio.exe" -ArgumentList "/S" -verb runas -Wait
+        Start-Sleep -Seconds 5
+        Write-Host "Removing install file"
+        Remove-Item -Path "$env:TEMP\rstudio.exe"
     }
 }
